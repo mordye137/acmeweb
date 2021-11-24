@@ -35,7 +35,7 @@ public class StatusController {
      * @return a ServerStatus object containing the info to be returned to the requestor
      */
     @RequestMapping("/status")
-    public ServerStatus greeting(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
+    public ServerStatus returnServerStatusAndGreeting(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
         return new ServerStatus(counter.incrementAndGet(),
                 String.format(template, name));
     }
