@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -25,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/server")
 public class StatusController {
 
-    protected static final String template = "Server Status requested by %s";
+    protected static final String template = "Server Status requested by %s. Details: %s";
     protected final AtomicLong counter = new AtomicLong();
 
     /**
@@ -35,8 +36,10 @@ public class StatusController {
      * @return a ServerStatus object containing the info to be returned to the requestor
      */
     @RequestMapping("/status")
-    public ServerStatus returnServerStatusAndGreeting(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
+    public ServerStatus returnServerStatusGreetingAndDetails(
+            @RequestParam(value = "name", defaultValue = "Anonymous") String name,
+            @RequestParam(required = false, value = "details", defaultValue = "No details provided") List<String> details) {
         return new ServerStatus(counter.incrementAndGet(),
-                String.format(template, name));
+                String.format(template, name, details));
     }
 }
