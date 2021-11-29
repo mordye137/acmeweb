@@ -36,6 +36,7 @@ public class StatusController {
      * Process a request for server status information
      *
      * @param name optional param identifying the requestor
+     * @param details optional param for user to input details
      * @return a ServerStatus object containing the info to be returned to the requestor
      */
     @RequestMapping("/status")
