@@ -28,9 +28,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/server")
 public class StatusController {
 
-    protected static final String template = "Server Status requested by %s.";
+    protected static final String template = "Server Status requested by %s";
     protected final AtomicLong counter = new AtomicLong();
-    Logger logger = LoggerFactory.getLogger("detialsLogger");
+    Logger logger = LoggerFactory.getLogger("detailsLogger");
 
     /**
      * Process a request for server status information
