@@ -2,7 +2,7 @@ package com.acme.detailed;
 
 public class SystemDetails implements IDetails{
 
-    private Runtime runtime;
+    private final Runtime runtime = Runtime.getRuntime();
 
     /**
      * @return available processors from runtime

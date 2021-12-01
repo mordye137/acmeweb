@@ -4,6 +4,7 @@ package com.acme.detailed;
 /**
  * This interface is made to return information about the System
  */
+
 public interface IDetails {
 
     /**
