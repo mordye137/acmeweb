@@ -1,5 +1,7 @@
 package com.acme.statusmgr;
 
+import com.acme.detailed.IDetails;
+import com.acme.detailed.MockSystemDetails;
 import com.acme.detailed.SystemDetails;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ServerStatusFacadeTests {
 
-    private SystemDetails systemDetails = SystemDetails.getInstance();
+    private IDetails systemDetails = SystemDetails.getInstance();
+    private IDetails fakeDetails = new MockSystemDetails();
 
     @Autowired
     private MockMvc mockMvc;

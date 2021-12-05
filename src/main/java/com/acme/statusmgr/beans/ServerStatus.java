@@ -1,7 +1,10 @@
 package com.acme.statusmgr.beans;
 
 import com.acme.decorators.*;
+import com.acme.detailed.IDetails;
 import com.acme.servermgr.ServerManager;
+import com.acme.statusmgr.exceptions.ForbiddenDetailsException;
+import org.springframework.http.HttpStatus;
 
 import javax.xml.transform.sax.SAXResult;
 import java.util.List;
@@ -67,7 +70,7 @@ public class ServerStatus {
      * @param details the list of details that will be used to decorate the server status
      * @return a decorated server status
      */
-    public static ServerStatus decorateStatus(ServerStatus serverStatus, List<String> details) {
+    public static ServerStatus decorateStatus(ServerStatus serverStatus, List<String> details) throws ForbiddenDetailsException {
 
         for (String detail : details ) {
 
@@ -82,6 +85,8 @@ public class ServerStatus {
                 case "jreVersion": serverStatus = new JREVersion(serverStatus); break;
 
                 case "tempLocation": serverStatus = new TempLocation(serverStatus); break;
+
+                default: throw new ForbiddenDetailsException("Invalid details option: " + detail);
             }
         }
         return serverStatus;

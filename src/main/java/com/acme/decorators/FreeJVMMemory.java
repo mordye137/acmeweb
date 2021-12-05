@@ -7,12 +7,12 @@ public class FreeJVMMemory extends ServerStatusDecorator{
 
     protected static final String template = ", and there are %s bytes of JVM memory free";
 
-    private SystemDetails systemDetails = SystemDetails.getInstance();
-
-    public FreeJVMMemory(ServerStatus serverStatus) { this.serverStatus = serverStatus; }
+    public FreeJVMMemory(ServerStatus serverStatus) {
+        this.serverStatus = serverStatus;
+    }
 
     public String getStatusDesc() {
-        return serverStatus.getStatusDesc() + String.format(template, systemDetails.getFreeJVMMemory());
+        return serverStatus.getStatusDesc() + String.format(template, detailsGetter.getFreeJVMMemory());
     }
 
     public long getId(){

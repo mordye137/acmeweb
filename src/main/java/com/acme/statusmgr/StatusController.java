@@ -1,12 +1,12 @@
 package com.acme.statusmgr;
 
-import com.acme.decorators.ServerStatusDecorator;
 import com.acme.statusmgr.beans.ServerStatus;
+import com.acme.statusmgr.exceptions.ForbiddenDetailsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -60,8 +60,8 @@ public class StatusController {
     public ServerStatus welcomeUserAndOutputDetails(
             @RequestParam(value = "name", defaultValue = "Anonymous") String name,
             @RequestParam(value = "details", defaultValue = "") List<String> details) {
-        ServerStatus serverStatus;
         return ServerStatus.decorateStatus(new ServerStatus(counter.incrementAndGet(),
                 String.format(template, name)), details);
     }
+
 }
