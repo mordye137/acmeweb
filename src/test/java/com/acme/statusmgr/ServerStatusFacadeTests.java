@@ -1,8 +1,10 @@
 package com.acme.statusmgr;
 
+import com.acme.decorators.ServerStatusDecorator;
 import com.acme.detailed.IDetails;
 import com.acme.detailed.MockSystemDetails;
 import com.acme.detailed.SystemDetails;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,15 +16,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.hamcrest.Matchers.is;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ServerStatusFacadeTests {
 
-    private IDetails systemDetails = SystemDetails.getInstance();
-    private IDetails fakeDetails = new MockSystemDetails();
-
     @Autowired
     private MockMvc mockMvc;
+
+    @BeforeAll
+    public static void setup() {
+        ServerStatusDecorator.detailsSetter(new MockSystemDetails());
+    }
 
     @Test
     public void mock_detailed_no_name() throws Exception {
@@ -41,15 +47,15 @@ public class ServerStatusFacadeTests {
     }
 
     @Test
-    public void mock_all_details() throws Exception {
+    public void mock_all_fake_details() throws Exception {
         this.mockMvc.perform(get("/server/status/detailed?name=Mordy&details=availableProcessors,freeJVMMemory,totalJVMMemory,jreVersion,tempLocation"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Mordy"))
-                .andExpect(jsonPath("$.statusDesc").value("Server is up, and there are 4 processors available, and there are " +
-                        systemDetails.getFreeJVMMemory() + " bytes of JVM memory free, and there is a total of" +
-                        systemDetails.getTotalJVMMemory() + " bytes of JVM memory, and the JRE version is " +
-                        systemDetails.getJreVersion()+ ", and the server's temp file location is " +
-                        systemDetails.getTempLocation()));
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and there are 4 processors available," +
+                        " and there are 127268272 bytes of JVM memory free," +
+                        " and there is a total of 159383552 bytes of JVM memory," +
+                        " and the JRE version is 15.0.2+7-27," +
+                        " and the server's temp file location is M:\\\\AppData\\\\Local\\\\Temp"));
     }
 
     @Test
@@ -58,6 +64,28 @@ public class ServerStatusFacadeTests {
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Mordy"))
                 .andExpect(jsonPath("$.statusDesc").value("Server is up, and there are 4 processors available, and there are 4 processors available"));
+    }
+
+    @Test
+    public void mock_diff_order_details() throws Exception{
+        this.mockMvc.perform(get("/server/status/detailed?details=tempLocation,totalJVMMemory,availableProcessors"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc")
+                        .value("Server is up," +
+                                " and the server's temp file location is M:\\\\AppData\\\\Local\\\\Temp," +
+                                " and there is a total of 159383552 bytes of JVM memory," +
+                                " and there are 4 processors available"));
+    }
+
+    @Test
+    public void correct_error() throws Exception {
+        this.mockMvc.perform(get("/server/status/detailed?name=Mordy&details=availableProcessors,junkERROR"))
+                .andDo(print()).andExpect(status().is4xxClientError());
+    }
+    @Test
+    public void correct_error_message() throws Exception {
+        this.mockMvc.perform(get("/server/status/detailed?name=Mordy&details=availableProcessors,junkERROR"))
+                .andDo(print()).andExpect(status().reason(is("Invalid details option: junkERROR")));
     }
 
 }

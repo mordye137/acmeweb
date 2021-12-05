@@ -16,7 +16,7 @@ public abstract class ServerStatusDecorator extends ServerStatus {
 
     public abstract String getStatusDesc();
 
-    void detailsSetter(IDetails details){
-        this.detailsGetter = details;
+    public static void detailsSetter(IDetails details){
+        detailsGetter = details;
     }
 }

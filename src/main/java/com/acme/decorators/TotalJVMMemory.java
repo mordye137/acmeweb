@@ -5,7 +5,7 @@ import com.acme.statusmgr.beans.ServerStatus;
 
 public class TotalJVMMemory extends ServerStatusDecorator {
 
-    protected static final String template = ", and there is a total of  %s bytes of JVM memory";
+    protected static final String template = ", and there is a total of %s bytes of JVM memory";
 
     public TotalJVMMemory(ServerStatus serverStatus) {
         this.serverStatus = serverStatus;
