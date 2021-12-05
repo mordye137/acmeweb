@@ -1,5 +1,6 @@
 package com.acme.statusmgr;
 
+import com.acme.detailed.SystemDetails;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ServerStatusFacadeTests {
+
+    private SystemDetails systemDetails = SystemDetails.getInstance();
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +42,11 @@ public class ServerStatusFacadeTests {
         this.mockMvc.perform(get("/server/status/detailed?name=Mordy&details=availableProcessors,freeJVMMemory,totalJVMMemory,jreVersion,tempLocation"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentHeader").value("Server Status requested by Mordy"))
-                .andExpect(jsonPath("$.statusDesc").value("Server is up, and there are 4 processors available, and there are 127268272 bytes of JVM memory free, and there is a total of 159383552 bytes of JVM memory, and the JRE version is 15.0.2+7-27, and the server's temp file location is M:\\\\AppData\\\\Local\\\\Temp"));
+                .andExpect(jsonPath("$.statusDesc").value("Server is up, and there are 4 processors available, and there are " +
+                        systemDetails.getFreeJVMMemory() + " bytes of JVM memory free, and there is a total of" +
+                        systemDetails.getTotalJVMMemory() + " bytes of JVM memory, and the JRE version is " +
+                        systemDetails.getJreVersion()+ ", and the server's temp file location is " +
+                        systemDetails.getTempLocation()));
     }
 
     @Test

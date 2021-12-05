@@ -1,5 +1,6 @@
 package com.acme.statusmgr;
 
+import com.acme.decorators.ServerStatusDecorator;
 import com.acme.statusmgr.beans.ServerStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,5 +48,20 @@ public class StatusController {
             logger.info("Details were provided: " + details);
         return new ServerStatus(counter.incrementAndGet(),
                 String.format(template, name));
+    }
+
+
+    /**
+     * @param name param for requestor to provide name for ServerStatus content header
+     * @param details list of details from the requestor
+     * @return a decorated ServerStatus object containing the info to be returned to the requestor
+     */
+    @RequestMapping("/status/detailed")
+    public ServerStatus welcomeUserAndOutputDetails(
+            @RequestParam(value = "name", defaultValue = "Anonymous") String name,
+            @RequestParam(value = "details", defaultValue = "") List<String> details) {
+        ServerStatus serverStatus;
+        return ServerStatus.decorateStatus(new ServerStatus(counter.incrementAndGet(),
+                String.format(template, name)), details);
     }
 }

@@ -1,7 +1,32 @@
 package com.acme.detailed;
 
+import com.acme.servermgr.ServerManager;
+
+/**
+ * Public class that implements IDetails
+ * and methods return system info from Runtime
+ */
 public class SystemDetails implements IDetails{
 
+    private static final SystemDetails instance;
+
+    /**
+     * Create private constructor so it cannot be accessed externally
+     */
+    private SystemDetails(){};
+
+    static { instance = new SystemDetails(); }
+
+    /**
+     * @return an instance of SystemDetails
+     */
+    public static SystemDetails getInstance() {
+        return instance;
+    }
+
+    /**
+     * Get an instance of Runtime
+     */
     private final Runtime runtime = Runtime.getRuntime();
 
     /**

@@ -1,6 +1,11 @@
 package com.acme.detailed;
 
+/**
+ * Public class that implements the IDetails interface
+ * and methods return fake system details
+ */
 public class MockSystemDetails implements IDetails{
+
     /**
      * @return mock available processors
      */

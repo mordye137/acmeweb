@@ -1,6 +1,10 @@
 package com.acme.statusmgr.beans;
 
+import com.acme.decorators.*;
 import com.acme.servermgr.ServerManager;
+
+import javax.xml.transform.sax.SAXResult;
+import java.util.List;
 
 /**
  * A POJO that represents Server Status and can be returned as the result of a request.
@@ -58,6 +62,29 @@ public class ServerStatus {
         return statusDesc;
     }
 
+    /**
+     * @param serverStatus the server status that needs to be decorated
+     * @param details the list of details that will be used to decorate the server status
+     * @return a decorated server status
+     */
+    public static ServerStatus decorateStatus(ServerStatus serverStatus, List<String> details) {
 
+        for (String detail : details ) {
+
+            switch (detail) {
+
+                case "availableProcessors": serverStatus = new AvailableProcessors(serverStatus); break;
+
+                case "freeJVMMemory": serverStatus = new FreeJVMMemory(serverStatus); break;
+
+                case "totalJVMMemory": serverStatus = new TotalJVMMemory(serverStatus); break;
+
+                case "jreVersion": serverStatus = new JREVersion(serverStatus); break;
+
+                case "tempLocation": serverStatus = new TempLocation(serverStatus); break;
+            }
+        }
+        return serverStatus;
+    }
 
 }
