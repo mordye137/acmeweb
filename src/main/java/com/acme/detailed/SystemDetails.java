@@ -4,7 +4,8 @@ import com.acme.servermgr.ServerManager;
 
 /**
  * Public class that implements IDetails
- * and methods return system info from Runtime
+ * and methods return system info from Runtime.
+ * Enforces the Singleton design pattern.
  */
 public class SystemDetails implements IDetails{
 
